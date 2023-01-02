@@ -1,0 +1,134 @@
+problem 1 
+
+# tar -czvf index_tar.tar.gz index_tar
+# sudo docker build -t image1:1.0 .
+# sudo docker images
+# sudo docker run -d -it --name nginx_container -p 8000:80 image1:1.0
+# sudo docker ps -a '
+
+
+
+problem 2
+
+Dockerfile:
+FROM node:alpine3.16
+
+WORKDIR /app
+
+COPY package*.json ./
+
+RUN npm install
+
+COPY . .
+
+EXPOSE 3000
+
+CMD ["npm" , "start"]
+
+
+stage 1:
+# npx create-react-app my-app
+# cd my-app
+# touch Dockerfile
+# sudo docker build -t image2:1.0 .
+# sudo docker run -it --name reactapp -p 3000:3000 image2:1.0 
+
+multi-stage:
+Dockerfile:
+
+FROM node:alpine3.16 AS build
+
+WORKDIR /app
+
+COPY package*.json ./
+
+RUN npm install
+
+COPY . .
+
+RUN npm run build
+
+
+FROM nginx:alpine
+
+COPY --from=build /app/build /usr/share/nginx/html
+
+EXPOSE 80
+
+CMD [ "nginx", "-g", "daemon off;" ]
+
+multi-stage:
+
+#sudo docker build -t image3:1.0 .
+# sudo docker run -it --name app2 -p 8000:80 image3:1.0 
+
+
+
+
+problem 3:
+
+
+Bridge Networks
+Bridge networking is the most common network type. It is limited to containers within a single host
+running the Docker engine. Bridge networks are easy to create, manage and troubleshoot.
+Overlay Networks
+An overlay network uses software virtualization to create additional layers of network abstraction
+running on top of a physical network. In Docker, an overlay network driver is used for multi-host
+network communication.
+Macvlan Networks
+The macvlan driver is used to connect Docker containers directly to the host network interfaces
+through layer 2 segmentation. No use of port mapping or network address translation (NAT) is
+needed and containers can be assigned a public IP address which is accessible from the outside
+world.
+
+
+problem 4:
+
+1. sudo docker run -it -d --name container1 ubuntu
+2. sudo docker run -it -d --name container2 ubuntu
+3. sudo docker exec -it container1 bash
+4. apt-get update
+5. apt-get install inetutils-ping 
+6. sudo docker network create network
+7. sudo docker network connect network container1
+8. sudo docker network connect network container2
+9. sudo docker network inspect network
+10. sudo docker exec -it container1 bash
+11. ping container2 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

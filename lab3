@@ -1,0 +1,96 @@
+problem 1:
+Dockerfile:
+FROM node:alpine3.16 AS build
+
+WORKDIR /app
+
+COPY package*.json ./
+
+RUN npm install
+
+COPY . .
+
+RUN npm run build
+
+
+FROM  nginx:alpine
+
+COPY --from=build /app/build /usr/share/nginx/html
+
+EXPOSE 80
+
+CMD [ "nginx", "-g", "daemon off;" ]
+
+DockerCompose:
+
+version: '3.5'
+services:
+  react-app:
+    image: image3:1.0
+    container_name: compose
+    restart: always
+    ports:
+      - "3001:80"
+
+
+
+
+# sudo apt install docker-compose
+# sudo docker-compose up -d 
+# sudo docker-compose ps 
+
+
+problem 2:
+
+app.py :
+from flask import Flask
+from redis import Redis
+
+app = Flask(__name__)
+redis = Redis(host='redis', port=6379)
+
+@app.route('/')
+def hello():
+    redis.incr('hits')
+    counter = str(redis.get('hits'),'utf-8')
+    return "This webpage has been viewed "+counter+" time(s)"
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8000, debug=True)
+    
+requirements:
+flask
+redis    
+    
+Dockerfile:
+
+FROM python:3.11.0a6-alpine3.15
+
+WORKDIR /code
+
+COPY requirements.txt /code
+
+RUN pip install -r requirements.txt --no-cache-dir
+
+COPY . /code
+
+CMD python app.py
+
+
+
+Docker-compose:
+version: '3'
+services:
+  web:
+    build: .
+    ports:
+      - "8001:5000"
+  redis:
+    image: "redis:alpine"
+
+
+# sudo docker-compose up 
+# enter link 
+
+
+
