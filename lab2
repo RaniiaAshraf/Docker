@@ -1,5 +1,6 @@
-#problem 1
-##Dockerfile
+problem 1
+Dockerfile:
+
 FROM ubuntu:22.04
 RUN apt update
 RUN apt install nginx -y
@@ -21,6 +22,7 @@ CMD ["/usr/sbin/nginx","-g","daemon off;"]
 problem 2
 
 Dockerfile:
+
 FROM node:alpine3.16
 
 WORKDIR /app
